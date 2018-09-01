@@ -15,19 +15,24 @@ import matplotlib.pyplot as plt
 from mpl_toolkits.mplot3d import Axes3D
 
 #Constants
-mass_earth = 5.9723e+24
-mass_sun = 1988500e+24
 G = 6.67259e-11
 
-trashBoiX = []
-trashBoiY = []
-trashBoiZ = []
+#TODO: Write user input script for user-determined timestep
+timeStep = 4000
+
+#positionFinal described new position after script iteration
+#Z is placeholder for now
+positionFinalX = []
+positionFinalY = []
+positionFinalZ = []
 
 #Array of all bodies being taken into consideration
 bodyArray = ['Sun', 'Mercury', 'Venus', 'Earth', 'Mars', 'Jupiter']
 
 massArray = [1988500e+24, 0.3304e+24, 4.8675e+24, 5.9723e+24, 0.64171e+24, 1,898.19e+24]
 
+#TODO: Write function to calculate these from position, angle, etc.
+#TODO: -(V*cos(theta)) = Vx
 #Array of positions of all bodies. Each body has x and y positions
 positionArray = np.array([[0, 0], 
                           [9.990354752e+9, 4.490203572e+10], 
@@ -103,19 +108,11 @@ def find_a_total(target):
     a_totArray = np.array(a_totArray)
     return a_totArray
 
-"""
-#Create text files for the output of each body (otherwise the output is a mess)
-#This function is useless for now
-def create_files():
-    for body in bodyArray:
-        pass
-    return 0
-"""
-
 #([a_tot, a_x, a_y], [a_tot, a_x, a_y])
+#Commented lines in this function are for outdated graphing method
 def update_position(target):
     #outfile = open(target, 'w')
-    for counter in range(0, 4000):
+    for counter in range(0, timeStep):
         for body in bodyArray:
             if body == target:
                 a_totArray = find_a_total(target)
@@ -123,9 +120,9 @@ def update_position(target):
                 velocityArray[bodyArray.index(target)][1] += (a_totArray[0][1] * 86400)
                 positionArray[bodyArray.index(target)][0] += velocityArray[bodyArray.index(target)][0] * 86400
                 positionArray[bodyArray.index(target)][1] += velocityArray[bodyArray.index(target)][1] * 86400
-                trashBoiX.append(positionArray[bodyArray.index(target)][0])
-                trashBoiY.append(positionArray[bodyArray.index(target)][1])
-                trashBoiZ.append(0)
+                positionFinalX.append(positionArray[bodyArray.index(target)][0])
+                positionFinalY.append(positionArray[bodyArray.index(target)][1])
+                positionFinalZ.append(0)
                 #print >>outfile, positionArray[bodyArray.index(target)][0], positionArray[bodyArray.index(target)][1]                
     return 0
 
@@ -134,9 +131,9 @@ def update_test():
         update_position(body)
     fig = plt.figure()
     ax = fig.add_subplot(111, projection='3d')
-    x = trashBoiX
-    y = trashBoiY
-    z = trashBoiZ
+    x = positionFinalX
+    y = positionFinalY
+    z = positionFinalZ
     ax.scatter(x, y, z, c='r', marker='o')
     plt.show()
     return 0
